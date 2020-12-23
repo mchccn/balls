@@ -8,6 +8,7 @@ import {
 } from "../constants.js";
 import Entity from "../lib/core/classes/Entity.js";
 import Vector from "../lib/core/classes/Vector.js";
+import Game from "../lib/core/env/Game.js";
 
 export default class Player extends Entity {
   public color = "cyan";
@@ -16,7 +17,7 @@ export default class Player extends Entity {
   private gravitySpeed = 0;
   private mousePos = { x: WIDTH / 2, y: HEIGHT / 2 };
   private mouseDown = false;
-  private ctx: CanvasRenderingContext2D | null = null;
+  private game: Game | null = null;
   private isGrounded = false;
 
   constructor(x: number, y: number) {
@@ -31,12 +32,12 @@ export default class Player extends Entity {
       this.shoot();
     });
     document.addEventListener("mousemove", (e) => {
-      this.mousePos = this.getMousePos(this.ctx!.canvas, e);
+      this.mousePos = this.getMousePos(this.game?.canvas!, e);
     });
   }
 
-  public setCtx(ctx: CanvasRenderingContext2D) {
-    this.ctx = ctx;
+  public setGame(game: Game) {
+    this.game = game;
   }
 
   public update(ctx: CanvasRenderingContext2D, deltaTime: number) {
@@ -45,6 +46,7 @@ export default class Player extends Entity {
     if (this.gravitySpeed > SIZE * 2) this.gravitySpeed = SIZE * 2;
 
     this.vel.y += this.gravitySpeed + this.gravitySpeed * 2;
+    if (!this.isGrounded && this.vel.y > 0) this.vel.x *= 1.1;
     this.vel.multiply(0.9);
 
     this.pos.x += this.vel.x * deltaTime;

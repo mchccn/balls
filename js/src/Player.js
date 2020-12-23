@@ -10,7 +10,7 @@ export default class Player extends Entity {
         this.gravitySpeed = 0;
         this.mousePos = { x: WIDTH / 2, y: HEIGHT / 2 };
         this.mouseDown = false;
-        this.ctx = null;
+        this.game = null;
         this.isGrounded = false;
         this.pos = new Vector(WORLD_WIDTH / 2 - WIDTH / 2, WORLD_HEIGHT - this.r);
         document.addEventListener("mousedown", (e) => {
@@ -21,17 +21,19 @@ export default class Player extends Entity {
             this.shoot();
         });
         document.addEventListener("mousemove", (e) => {
-            this.mousePos = this.getMousePos(this.ctx.canvas, e);
+            this.mousePos = this.getMousePos(this.game?.canvas, e);
         });
     }
-    setCtx(ctx) {
-        this.ctx = ctx;
+    setGame(game) {
+        this.game = game;
     }
     update(ctx, deltaTime) {
         this.gravitySpeed += GRAVITY * deltaTime * this.mass;
         if (this.gravitySpeed > SIZE * 2)
             this.gravitySpeed = SIZE * 2;
         this.vel.y += this.gravitySpeed + this.gravitySpeed * 2;
+        if (!this.isGrounded && this.vel.y > 0)
+            this.vel.x *= 1.1;
         this.vel.multiply(0.9);
         this.pos.x += this.vel.x * deltaTime;
         this.pos.y += this.vel.y * deltaTime;

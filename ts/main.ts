@@ -29,7 +29,7 @@ const game = new Game(
   scene
 );
 
-player.setCtx(game.ctx);
+player.setGame(game);
 
 game.setActive("main");
 

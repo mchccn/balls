@@ -11,7 +11,7 @@ const game = new Game({
     width: 1600,
     height: 900,
 }, player, scene);
-player.setCtx(game.ctx);
+player.setGame(game);
 game.setActive("main");
 const update = (ctx, deltaTime) => {
     ctx.clearRect(0, 0, WIDTH, HEIGHT);

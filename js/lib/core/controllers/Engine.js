@@ -1,4 +1,3 @@
-import { HEIGHT, WIDTH } from "../../../constants.js";
 import Container from "../classes/Container.js";
 import Entity from "../classes/Entity.js";
 export default class Engine extends Entity {
@@ -23,17 +22,12 @@ export default class Engine extends Entity {
             const dt = Date.now() - this.shake.start;
             const easingCoef = dt / this.shake.time;
             const easing = Math.pow(easingCoef - 1, 3) + 1;
-            const dx = easing * (Math.cos(dt * 0.1) + Math.cos(dt * 0.3115));
-            const dy = easing * (Math.sin(dt * 0.05) + Math.sin(dt * 0.057113));
+            const dx = easing * (Math.cos(dt * 0.1) + Math.cos(dt * 0.3115)) * 2;
+            const dy = easing * (Math.sin(dt * 0.05) + Math.sin(dt * 0.057113)) * 2;
             ctx.translate(dx, dy);
         }
-        else
-            ctx.setTransform({
-                e: 0,
-                f: 0,
-            });
         ctx.save();
-        ctx.translate(WIDTH / 2 - this.target.pos.x, HEIGHT / 2 - this.target.pos.y);
+        ctx.translate(this.game.canvas.width / 2 - this.target.pos.x, this.game.canvas.height / 2 - this.target.pos.y);
         if (this.game.activeScene)
             this.game.activeScene.entities.forEach((ent) => {
                 if (!(ent instanceof Container))
