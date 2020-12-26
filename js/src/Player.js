@@ -12,6 +12,8 @@ export default class Player extends Entity {
         this.mouseDown = false;
         this.game = null;
         this.isGrounded = false;
+        this.health = WIDTH;
+        this.score = 0;
         this.pos = new Vector(WORLD_WIDTH / 2 - WIDTH / 2, WORLD_HEIGHT - this.r);
         document.addEventListener("mousedown", (e) => {
             this.mouseDown = true;
@@ -28,6 +30,11 @@ export default class Player extends Entity {
         this.game = game;
     }
     update(ctx, deltaTime) {
+        if (this.health > WIDTH)
+            this.health = WIDTH;
+        this.health -= 2;
+        if (this.score < 0)
+            this.score = 0;
         this.gravitySpeed += GRAVITY * deltaTime * this.mass;
         if (this.gravitySpeed > SIZE * 2)
             this.gravitySpeed = SIZE * 2;
@@ -57,10 +64,17 @@ export default class Player extends Entity {
         return this;
     }
     render(ctx) {
+        ctx.save();
+        ctx.resetTransform();
+        ctx.fillStyle = "darkred";
+        ctx.fillRect(0, 0, WIDTH, SIZE);
+        ctx.fillStyle = "lightgreen";
+        ctx.fillRect(0, 0, this.health, SIZE);
+        ctx.fillStyle = "white";
+        ctx.font = "36px Arial";
+        ctx.fillText(this.score.toString(), SIZE / 2, HEIGHT - SIZE / 2);
         if (this.mouseDown) {
             const { x, y } = this.mousePos;
-            ctx.save();
-            ctx.resetTransform();
             const g = ctx.createLinearGradient(WIDTH / 2, HEIGHT / 2, x, y);
             g.addColorStop(0, `rgba(255, 255, 255, ${this.isGrounded ? "1" : "0"})`);
             g.addColorStop(1, "rgba(255, 255, 255, 0)");
@@ -71,11 +85,15 @@ export default class Player extends Entity {
             ctx.lineTo(x, y);
             ctx.closePath();
             ctx.stroke();
-            ctx.restore();
+            if (this.isGrounded) {
+                this.vel.y *= 0.25;
+                this.health--;
+            }
         }
+        ctx.restore();
         ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.arc(this.pos.x, this.pos.y, SIZE, 0, Math.PI * 2, false);
+        ctx.arc(this.pos.x, this.pos.y, this.r, 0, Math.PI * 2, false);
         ctx.fill();
         ctx.closePath();
         return this;
@@ -91,6 +109,7 @@ export default class Player extends Entity {
             if (v.magnitude > HEIGHT)
                 v = v.normalized.multiply(HEIGHT);
             this.vel.add(v.multiply(10));
+            this.health -= 100;
         }
     }
     getMousePos(canvas, e) {

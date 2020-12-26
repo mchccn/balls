@@ -1,4 +1,3 @@
-import Container from "../classes/Container.js";
 import Entity from "../classes/Entity.js";
 import Game from "../env/Game.js";
 
@@ -50,7 +49,7 @@ export default class Engine extends Entity {
 
     if (this.game.activeScene)
       this.game.activeScene.entities.forEach((ent) => {
-        if (!(ent instanceof Container)) ent.render(ctx);
+        ent.render(ctx);
       });
 
     ctx.restore();

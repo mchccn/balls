@@ -1,4 +1,3 @@
-import { MethodNotImplementedError } from "../../types.js";
 import Entity from "./Entity.js";
 export default class Container extends Entity {
     constructor(...entities) {
@@ -12,7 +11,10 @@ export default class Container extends Entity {
         return this;
     }
     render(ctx) {
-        throw new MethodNotImplementedError("Container.prototype.render is not implemented and should not be called.");
+        this.entities.forEach((e) => {
+            e.render(ctx);
+        });
+        return this;
     }
     add(e) {
         this.entities.push(e);

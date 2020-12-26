@@ -5,6 +5,7 @@ import Engine from "./core/controllers/Engine.js";
 import Timer from "./core/controllers/Timer.js";
 import Game from "./core/env/Game.js";
 import Scene from "./core/env/Scene.js";
+import Text from "./core/env/Text.js";
 
 export default {
   Game,
@@ -14,4 +15,5 @@ export default {
   Entity,
   Vector,
   Timer,
+  Text,
 };

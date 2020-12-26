@@ -1,10 +1,9 @@
-import { MethodNotImplementedError } from "../../types.js";
 import Entity from "./Entity.js";
 
-export default class Container extends Entity {
-  public entities: Entity[];
+export default class Container<E extends Entity = Entity> extends Entity {
+  public entities: E[];
 
-  constructor(...entities: Entity[]) {
+  constructor(...entities: E[]) {
     super(0, 0);
     this.entities = entities;
   }
@@ -22,20 +21,21 @@ export default class Container extends Entity {
   }
 
   /**
-   * Do not call this method on Container unless you want an error.
-   * @deprecated The container class has no need for a render method.
+   * Renders every entity in the container
+   * @param ctx The canvas context to render to.
    */
   public render(ctx: CanvasRenderingContext2D): this {
-    throw new MethodNotImplementedError(
-      "Container.prototype.render is not implemented and should not be called."
-    );
+    this.entities.forEach((e) => {
+      e.render(ctx);
+    });
+    return this;
   }
 
   /**
    * Adds an entity to the container
    * @param e Entity to add.
    */
-  public add(e: Entity) {
+  public add(e: E) {
     this.entities.push(e);
     return e;
   }
@@ -44,7 +44,7 @@ export default class Container extends Entity {
    * Removes an entity from the container.
    * @param e Entity to remove.
    */
-  public remove(e: Entity) {
+  public remove(e: E) {
     this.entities = this.entities.filter((ent) => ent !== e);
     return e;
   }

@@ -62,7 +62,7 @@ export default class Game extends Container {
     get player() {
         return this._player;
     }
-    destroy() {
+    static destroy() {
         Game.instance = null;
         return Game;
     }

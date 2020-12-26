@@ -19,4 +19,8 @@ export default class Scene extends Container {
       );
     }
   }
+
+  public static destroy() {
+    Scene.keys = [];
+  }
 }

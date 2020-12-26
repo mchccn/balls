@@ -1,4 +1,3 @@
-import Container from "../classes/Container.js";
 import Entity from "../classes/Entity.js";
 export default class Engine extends Entity {
     constructor(x, y, target, game) {
@@ -30,8 +29,7 @@ export default class Engine extends Entity {
         ctx.translate(this.game.canvas.width / 2 - this.target.pos.x, this.game.canvas.height / 2 - this.target.pos.y);
         if (this.game.activeScene)
             this.game.activeScene.entities.forEach((ent) => {
-                if (!(ent instanceof Container))
-                    ent.render(ctx);
+                ent.render(ctx);
             });
         ctx.restore();
         return this;

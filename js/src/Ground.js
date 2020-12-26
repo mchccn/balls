@@ -14,10 +14,10 @@ export default class Ground extends Entity {
         ctx.fillRect(this.pos.x, this.pos.y, this.w, this.h);
         ctx.strokeStyle = "white";
         ctx.beginPath();
-        ctx.moveTo(1, WORLD_HEIGHT);
+        ctx.moveTo(1, WORLD_HEIGHT + 1);
         ctx.lineTo(1, 1);
         ctx.lineTo(WORLD_WIDTH - 1, 1);
-        ctx.lineTo(WORLD_WIDTH - 1, WORLD_HEIGHT - 1);
+        ctx.lineTo(WORLD_WIDTH - 1, WORLD_HEIGHT + 1);
         ctx.closePath();
         ctx.stroke();
         return this;

@@ -65,6 +65,7 @@ export default class Game extends Container {
       if (s) this._activeScene = s;
     } else {
       const s = Object.keys(this.scenes).find((k) => k === scene);
+
       if (s) this._activeScene = this.scenes[s];
     }
 
@@ -102,7 +103,7 @@ export default class Game extends Container {
   /**
    * Destroys the game so you can make another one!
    */
-  public destroy() {
+  public static destroy() {
     Game.instance = null;
     return Game;
   }

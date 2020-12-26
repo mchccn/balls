@@ -12,6 +12,9 @@ export default class Scene extends Container {
             throw new NameAlreadyExistsError(`The key '${key}' already exists. Choose a different key.`);
         }
     }
+    static destroy() {
+        Scene.keys = [];
+    }
 }
 Scene.keys = [];
 //# sourceMappingURL=Scene.js.map
