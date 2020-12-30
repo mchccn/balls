@@ -6,19 +6,19 @@ export default class Player extends Entity {
         super(x, y);
         this.color = "cyan";
         this.r = SIZE;
-        this.mass = 50;
+        this.isGrounded = false;
+        this.health = WIDTH;
+        this.score = 0;
         this.gravitySpeed = 0;
         this.mousePos = { x: WIDTH / 2, y: HEIGHT / 2 };
         this.mouseDown = false;
         this.game = null;
-        this.isGrounded = false;
-        this.health = WIDTH;
-        this.score = 0;
         this.pos = new Vector(WORLD_WIDTH / 2 - WIDTH / 2, WORLD_HEIGHT - this.r);
         document.addEventListener("mousedown", (e) => {
             this.mouseDown = true;
         });
         document.addEventListener("mouseup", (e) => {
+            this.mousePos = this.getMousePos(this.game?.canvas, e);
             this.mouseDown = false;
             this.shoot();
         });
@@ -35,13 +35,13 @@ export default class Player extends Entity {
         this.health -= 2;
         if (this.score < 0)
             this.score = 0;
-        this.gravitySpeed += GRAVITY * deltaTime * this.mass;
+        this.gravitySpeed += GRAVITY * SIZE * deltaTime;
         if (this.gravitySpeed > SIZE * 2)
             this.gravitySpeed = SIZE * 2;
         this.vel.y += this.gravitySpeed + this.gravitySpeed * 2;
         if (!this.isGrounded && this.vel.y > 0)
             this.vel.x *= 1.1;
-        this.vel.multiply(0.9);
+        this.vel.multiply(new Vector(0.925, 0.9));
         this.pos.x += this.vel.x * deltaTime;
         this.pos.y += this.vel.y * deltaTime;
         if (this.pos.y + this.r > WORLD_HEIGHT) {
@@ -71,8 +71,8 @@ export default class Player extends Entity {
         ctx.fillStyle = "lightgreen";
         ctx.fillRect(0, 0, this.health, SIZE);
         ctx.fillStyle = "white";
-        ctx.font = "36px Arial";
-        ctx.fillText(this.score.toString(), SIZE / 2, HEIGHT - SIZE / 2);
+        ctx.font = "48px Arial";
+        ctx.fillText(this.score.toString(), SIZE / 2, HEIGHT - SIZE / 1.5);
         if (this.mouseDown) {
             const { x, y } = this.mousePos;
             const g = ctx.createLinearGradient(WIDTH / 2, HEIGHT / 2, x, y);

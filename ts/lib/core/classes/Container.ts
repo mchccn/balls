@@ -1,4 +1,6 @@
+import { D } from "../../../constants.js";
 import Entity from "./Entity.js";
+import Vector from "./Vector.js";
 
 export default class Container<E extends Entity = Entity> extends Entity {
   public entities: E[];
@@ -24,9 +26,15 @@ export default class Container<E extends Entity = Entity> extends Entity {
    * Renders every entity in the container
    * @param ctx The canvas context to render to.
    */
-  public render(ctx: CanvasRenderingContext2D): this {
+  public render(ctx: CanvasRenderingContext2D, cameraPos: Vector): this {
     this.entities.forEach((e) => {
-      e.render(ctx);
+      if (!(e instanceof Container)) {
+        const dx = e.pos.x - cameraPos.x;
+        const dy = e.pos.y - cameraPos.y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < D) return e.render(ctx, cameraPos);
+      }
+      e.render(ctx, cameraPos);
     });
     return this;
   }

@@ -20,29 +20,27 @@ let gameOver = false;
 
 const { Container, Game, Scene, Timer, Text } = lib;
 
+const gameOverScene = new Scene(
+  "gameover",
+  new Text(WIDTH / 2, HEIGHT / 2, "game over", "175px Arial", "cyan", true),
+  new Text(
+    WIDTH / 2,
+    HEIGHT / 2 + 100,
+    "click to trick again",
+    "50px Arial",
+    "red",
+    true
+  )
+);
+
 function game() {
   const ground = new Ground(0, WORLD_HEIGHT, WORLD_WIDTH, SIZE * 5);
 
   const player = new Player(0, 0);
 
-  const enemies = new Container<Enemy>();
-
-  for (let i = 0; i < 2000; i++) spawn();
+  const enemies = new Container<Enemy>(...new Array(3000).fill("").map(spawn));
 
   const scene = new Scene("main", ground, enemies, player);
-
-  const gameOverScene = new Scene(
-    "gameover",
-    new Text(WIDTH / 2, HEIGHT / 2, "game over", "175px Arial", "cyan", true),
-    new Text(
-      WIDTH / 2,
-      HEIGHT / 2 + 100,
-      "click to trick again",
-      "50px Arial",
-      "red",
-      true
-    )
-  );
 
   const game = new Game(
     {
@@ -103,6 +101,7 @@ function game() {
         }
         player.isGrounded = true;
         enemies.remove(enemy);
+        spawn();
       }
     });
 
@@ -118,38 +117,6 @@ function game() {
   const timer = new Timer(game.ctx, FPS, update);
 
   timer.start();
-
-  function spawn() {
-    const seed = Math.random();
-    if (seed < 0.6)
-      enemies.add(
-        new Enemy(
-          Math.floor(Math.random() * (WORLD_WIDTH - SIZE * 2) + SIZE),
-          Math.floor(Math.random() * (WORLD_HEIGHT - SIZE * 2) + SIZE)
-        )
-      );
-    else if (seed < 0.75)
-      enemies.add(
-        new Greenemy(
-          Math.floor(Math.random() * (WORLD_WIDTH - SIZE * 4) + SIZE * 2),
-          Math.floor(Math.random() * (WORLD_HEIGHT - SIZE * 4) + SIZE * 2)
-        )
-      );
-    else if (seed < 0.9)
-      enemies.add(
-        new Yellowemy(
-          Math.floor(Math.random() * (WORLD_WIDTH - SIZE * 2) + SIZE),
-          Math.floor(Math.random() * (WORLD_HEIGHT - SIZE * 2) + SIZE)
-        )
-      );
-    else
-      enemies.add(
-        new Pinkemy(
-          Math.floor(Math.random() * (WORLD_WIDTH - SIZE * 2) + SIZE),
-          Math.floor(Math.random() * (WORLD_HEIGHT - SIZE * 2) + SIZE)
-        )
-      );
-  }
 }
 
 game();
@@ -163,3 +130,15 @@ document.getElementById("canvas")!.addEventListener("click", (e) => {
     game();
   }
 });
+
+function spawn() {
+  const seed = Math.random();
+
+  const x = Math.round(Math.random() * (WORLD_WIDTH - SIZE * 2) + SIZE);
+  const y = Math.round(Math.random() * (WORLD_HEIGHT - SIZE * 2) + SIZE);
+
+  if (seed < 0.6) return new Enemy(x, y);
+  else if (seed < 0.75) return new Greenemy(x, y);
+  else if (seed < 0.9) return new Yellowemy(x, y);
+  else return new Pinkemy(x, y);
+}

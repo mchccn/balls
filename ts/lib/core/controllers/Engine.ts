@@ -1,4 +1,5 @@
 import Entity from "../classes/Entity.js";
+import Vector from "../classes/Vector.js";
 import Game from "../env/Game.js";
 
 export default class Engine extends Entity {
@@ -19,7 +20,7 @@ export default class Engine extends Entity {
   public update(ctx: CanvasRenderingContext2D, deltaTime: number) {
     if (this.game.activeScene) this.game.activeScene.update(ctx, deltaTime);
 
-    this.render(ctx);
+    this.render(ctx, this.pos);
 
     return this;
   }
@@ -28,7 +29,7 @@ export default class Engine extends Entity {
    * The Engine class also acts like the camera.
    * @param ctx The context to render to.
    */
-  public render(ctx: CanvasRenderingContext2D) {
+  public render(ctx: CanvasRenderingContext2D, cameraPos: Vector) {
     if (this.shake.active) {
       const dt = Date.now() - this.shake.start;
       const easingCoef = dt / this.shake.time;
@@ -49,7 +50,7 @@ export default class Engine extends Entity {
 
     if (this.game.activeScene)
       this.game.activeScene.entities.forEach((ent) => {
-        ent.render(ctx);
+        ent.render(ctx, cameraPos);
       });
 
     ctx.restore();

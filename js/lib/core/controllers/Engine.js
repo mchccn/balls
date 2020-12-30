@@ -13,10 +13,10 @@ export default class Engine extends Entity {
     update(ctx, deltaTime) {
         if (this.game.activeScene)
             this.game.activeScene.update(ctx, deltaTime);
-        this.render(ctx);
+        this.render(ctx, this.pos);
         return this;
     }
-    render(ctx) {
+    render(ctx, cameraPos) {
         if (this.shake.active) {
             const dt = Date.now() - this.shake.start;
             const easingCoef = dt / this.shake.time;
@@ -29,7 +29,7 @@ export default class Engine extends Entity {
         ctx.translate(this.game.canvas.width / 2 - this.target.pos.x, this.game.canvas.height / 2 - this.target.pos.y);
         if (this.game.activeScene)
             this.game.activeScene.entities.forEach((ent) => {
-                ent.render(ctx);
+                ent.render(ctx, cameraPos);
             });
         ctx.restore();
         return this;

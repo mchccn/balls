@@ -1,13 +1,6 @@
 import Vector from "./Vector.js";
 
-interface IEntity {
-  pos: Vector;
-  vel: Vector;
-  update(ctx: CanvasRenderingContext2D, deltaTime: number): this;
-  render(ctx: CanvasRenderingContext2D): this;
-}
-
-export default abstract class Entity implements IEntity {
+export default abstract class Entity {
   public pos: Vector;
   public vel: Vector;
 
@@ -30,5 +23,8 @@ export default abstract class Entity implements IEntity {
    * Renders this entity.
    * @param ctx The canvas context to render to.
    */
-  public abstract render(ctx: CanvasRenderingContext2D): this;
+  public abstract render(
+    ctx: CanvasRenderingContext2D,
+    cameraPos: Vector
+  ): this;
 }

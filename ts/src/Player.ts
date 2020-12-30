@@ -13,14 +13,13 @@ import Game from "../lib/core/env/Game.js";
 export default class Player extends Entity {
   public readonly color = "cyan";
   public r = SIZE;
-  public mass = 50;
+  public isGrounded = false;
+  public health = WIDTH;
+  public score = 0;
   private gravitySpeed = 0;
   private mousePos = { x: WIDTH / 2, y: HEIGHT / 2 };
   private mouseDown = false;
   private game: Game | null = null;
-  public isGrounded = false;
-  public health = WIDTH;
-  public score = 0;
 
   constructor(x: number, y: number) {
     super(x, y);
@@ -30,6 +29,7 @@ export default class Player extends Entity {
       this.mouseDown = true;
     });
     document.addEventListener("mouseup", (e) => {
+      this.mousePos = this.getMousePos(this.game?.canvas!, e);
       this.mouseDown = false;
       this.shoot();
     });
@@ -48,13 +48,14 @@ export default class Player extends Entity {
 
     if (this.score < 0) this.score = 0;
 
-    this.gravitySpeed += GRAVITY * deltaTime * this.mass;
+    this.gravitySpeed += GRAVITY * SIZE * deltaTime;
 
     if (this.gravitySpeed > SIZE * 2) this.gravitySpeed = SIZE * 2;
 
     this.vel.y += this.gravitySpeed + this.gravitySpeed * 2;
+
     if (!this.isGrounded && this.vel.y > 0) this.vel.x *= 1.1;
-    this.vel.multiply(0.9);
+    this.vel.multiply(new Vector(0.925, 0.9));
 
     this.pos.x += this.vel.x * deltaTime;
     this.pos.y += this.vel.y * deltaTime;
@@ -90,8 +91,8 @@ export default class Player extends Entity {
     ctx.fillRect(0, 0, this.health, SIZE);
 
     ctx.fillStyle = "white";
-    ctx.font = "36px Arial";
-    ctx.fillText(this.score.toString(), SIZE / 2, HEIGHT - SIZE / 2);
+    ctx.font = "48px Arial";
+    ctx.fillText(this.score.toString(), SIZE / 2, HEIGHT - SIZE / 1.5);
 
     if (this.mouseDown) {
       const { x, y } = this.mousePos;

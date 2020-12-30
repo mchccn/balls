@@ -1,3 +1,4 @@
+import { D } from "../../../constants.js";
 import Entity from "./Entity.js";
 export default class Container extends Entity {
     constructor(...entities) {
@@ -10,9 +11,16 @@ export default class Container extends Entity {
         });
         return this;
     }
-    render(ctx) {
+    render(ctx, cameraPos) {
         this.entities.forEach((e) => {
-            e.render(ctx);
+            if (!(e instanceof Container)) {
+                const dx = e.pos.x - cameraPos.x;
+                const dy = e.pos.y - cameraPos.y;
+                const d = Math.sqrt(dx * dx + dy * dy);
+                if (d < D)
+                    return e.render(ctx, cameraPos);
+            }
+            e.render(ctx, cameraPos);
         });
         return this;
     }
